@@ -1,6 +1,9 @@
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Duke {
+
+    public static ArrayList<String> list = new ArrayList<String>();
 
     public static void startup() {
         String startupMsg = "    ____________________________________________________________\n"
@@ -10,9 +13,10 @@ public class Duke {
         System.out.println(startupMsg);
     }
 
+    // Echoes when an item is added
     public static void echo(String inputLine) {
         String echoMsg = "     ____________________________________________________________\n"
-                + "     " + inputLine + "\n"
+                + "     added: " + inputLine + "\n"
                 + "     ____________________________________________________________\n";
         System.out.println(echoMsg);
     }
@@ -24,16 +28,39 @@ public class Duke {
         System.out.println(exitMsg);
     }
 
+    public static void addToList(String inputLine) {
+        list.add(inputLine);
+        echo(inputLine);
+    }
+
+    public static void showList() {
+        System.out.println("     ____________________________________________________________");
+        for (int i = 0; i < list.size(); i++) {
+            String msg = "     " + (i+1) + ". " + list.get(i);
+            System.out.println(msg);
+        }
+        System.out.println("     ____________________________________________________________");
+    }
+
     public static void handleInput() {
         Scanner input = new Scanner(System.in);
         String inputLine = input.nextLine();
+        String[] inputArray = inputLine.split(" ");
 
-        if (inputLine.equals("bye")) {
-            exit();
+        if (inputArray.length == 1) {
+
+            if (inputLine.equals("bye")) {
+                exit();
+                return;
+            } else if (inputLine.equals("list")) {
+                showList();
+            } else {
+                addToList(inputLine);
+            }
         } else {
-            echo(inputLine);
-            handleInput();
+            addToList(inputLine);
         }
+        handleInput();
     }
 
     public static void main(String[] args) {
