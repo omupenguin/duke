@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -6,35 +7,35 @@ public class Duke {
     public static ArrayList<String> list = new ArrayList<String>();
 
     // Print out message with formatting already done
-//    public static void printMsg(ArrayList<String> messages) {
-//        System.out.println("    ____________________________________________________________\n");
-//        for (String msg : messages) {
-//            System.out.println("     " + msg);
-//        }
-//        System.out.println("    ____________________________________________________________\n");
-//    }
+    public static void printMsg(ArrayList<String> msg) {
+        System.out.println("    ____________________________________________________________\n");
+        for (String outputMsg : msg) {
+            System.out.println("     " + outputMsg);
+        }
+        System.out.println("    ____________________________________________________________\n");
+    }
 
     public static void startup() {
-        String startupMsg = "    ____________________________________________________________\n"
-                + "     Hello! I'm Duke\n"
-                + "     What can I do for you?\n"
-                + "    ____________________________________________________________\n";
-        System.out.println(startupMsg);
+        ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
+                "Hello! I'm Duke!",
+                "What can I do for you?"
+        ));
+        printMsg(msg);
     }
 
     // Echoes when an item is added
     public static void echo(String inputLine) {
-        String echoMsg = "     ____________________________________________________________\n"
-                + "      added: " + inputLine + "\n"
-                + "     ____________________________________________________________\n";
-        System.out.println(echoMsg);
+        ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
+                "added: " + inputLine
+        ));
+        printMsg(msg);
     }
 
     public static void exit() {
-        String exitMsg = "     ____________________________________________________________\n"
-                + "      Bye. Hope to see you again soon!\n"
-                + "     ____________________________________________________________\n";
-        System.out.println(exitMsg);
+        ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
+                "Bye. Hope to see you again soon!"
+        ));
+        printMsg(msg);
     }
 
     public static void addToList(String inputLine) {
@@ -43,12 +44,11 @@ public class Duke {
     }
 
     public static void showList() {
-        System.out.println("     ____________________________________________________________");
+        ArrayList<String> msg = new ArrayList<String>();
         for (int i = 0; i < list.size(); i++) {
-            String msg = "      " + (i+1) + ". " + list.get(i);
-            System.out.println(msg);
+            msg.add( (i+1) + ". " + list.get(i) );
         }
-        System.out.println("     ____________________________________________________________");
+        printMsg(msg);
     }
 
     public static void handleInput(String inputLine) {
