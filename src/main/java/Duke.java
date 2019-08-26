@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Duke {
 
-    public static ArrayList<String> list = new ArrayList<String>();
+    public static ArrayList<Task> list = new ArrayList<Task>();
 
     // Print out message with formatting already done
     public static void printMsg(ArrayList<String> msg) {
@@ -39,14 +39,15 @@ public class Duke {
     }
 
     public static void addToList(String inputLine) {
-        list.add(inputLine);
+        Task newTask = new Task(inputLine);
+        list.add(newTask);
         echo(inputLine);
     }
 
     public static void showList() {
         ArrayList<String> msg = new ArrayList<String>();
         for (int i = 0; i < list.size(); i++) {
-            msg.add( (i+1) + ". " + list.get(i) );
+            msg.add( (i+1) + ". " + (list.get(i)).description );
         }
         printMsg(msg);
     }
