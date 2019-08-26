@@ -8,7 +8,7 @@ public class Duke {
 
     // Print out message with formatting already done
     public static void printMsg(ArrayList<String> msg) {
-        System.out.println("    ____________________________________________________________\n");
+        System.out.println("    ____________________________________________________________");
         for (String outputMsg : msg) {
             System.out.println("     " + outputMsg);
         }
@@ -46,8 +46,33 @@ public class Duke {
 
     public static void showList() {
         ArrayList<String> msg = new ArrayList<String>();
+        msg.add("Here are the tasks in your list:");
         for (int i = 0; i < list.size(); i++) {
-            msg.add( (i+1) + ". " + (list.get(i)).description );
+            Task currTask = list.get(i);
+            msg.add( (i+1) + ".[" + currTask.getStatusIcon() + "] " + currTask.description );
+        }
+        printMsg(msg);
+    }
+
+    // Need to find out how to only allow integers to pass thru :(
+    public static void completeTask(int listNum) {
+        ArrayList<String> msg = new ArrayList<String>();
+
+        // Failsafe in case zero or a number larger than provided tasks is given
+        if (listNum == 0 || listNum > list.size()) {
+            msg.add("There is no task associated to that number... yet! :)");
+            printMsg(msg);
+            return;
+        }
+
+        Task currTask = list.get(listNum-1);
+
+        if (currTask.isDone == true) {
+            msg.add("Task " + listNum + " is already completed! :)");
+        } else {
+            currTask.markAsDone();
+            msg.add("Nice! I've marked this task as done:");
+            msg.add("  [\u2713] " + currTask.description);
         }
         printMsg(msg);
     }
@@ -55,6 +80,9 @@ public class Duke {
     public static void handleInput(String inputLine) {
         String[] inputArray = inputLine.split(" ");
 
+        // Some improvements that can be made:
+        // We can ignore the length if we can ignore the rest of the contents after the
+        // first word. So just check inputArray[0] and determine function from there.
         if (inputArray.length == 1) {
 
             if (inputLine.equals("list")) {
@@ -63,6 +91,13 @@ public class Duke {
                 addToList(inputLine);
             }
 
+        } else if (inputArray.length == 2) {
+
+            if (inputArray[0].equals("done")) {
+                completeTask(Integer.parseInt(inputArray[1]));
+            } else {
+                addToList(inputLine);
+            }
         } else {
             addToList(inputLine);
         }

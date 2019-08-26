@@ -11,5 +11,8 @@ public class Task {
         return (isDone ? "\u2713" : "\u2718"); // returns ✓ or X
     }
 
-    
+    public void markAsDone() {
+        isDone = true;
+    }
+
 }
