@@ -24,9 +24,11 @@ public class Duke {
     }
 
     // Echoes when an item is added
-    public static void echo(String inputLine) {
+    public static void echoAdd(char type, String isDoneIcon, String taskDescription) {
         ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
-                "added: " + inputLine
+                "Got it. I've added this task: ",
+                "  [" + type + "][" + isDoneIcon + "] " + taskDescription,
+                "Now you have " + list.size() + " task(s) in the list."
         ));
         printMsg(msg);
     }
@@ -39,10 +41,10 @@ public class Duke {
     }
 
     public static void addToList(String command, String inputLine) {
-        String taskDescription = inputLine.substring(command.length());
 
         // Consider using Case Statements
         if (command.equals("todo")) {
+            String taskDescription = inputLine.substring(command.length()+1);
             addTodo(taskDescription);
         } else {
             ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
@@ -62,7 +64,8 @@ public class Duke {
         }
         Task newTask = new ToDos(taskDescription);
         list.add(newTask);
-        echo(taskDescription);
+
+        echoAdd(newTask.type, newTask.getStatusIcon(), taskDescription);
     }
 
     public static void showList() {
@@ -70,7 +73,7 @@ public class Duke {
         msg.add("Here are the tasks in your list:");
         for (int i = 0; i < list.size(); i++) {
             Task currTask = list.get(i);
-            msg.add( (i+1) + ".[" + currTask.getStatusIcon() + "] " + currTask.description );
+            msg.add( (i+1) + ".[" + currTask.type + "][" + currTask.getStatusIcon() + "] " + currTask.description );
         }
         printMsg(msg);
     }
@@ -93,7 +96,7 @@ public class Duke {
         } else {
             currTask.markAsDone();
             msg.add("Nice! I've marked this task as done:");
-            msg.add("  [\u2713] " + currTask.description);
+            msg.add("  [" + currTask.type + "][\u2713] " + currTask.description);
         }
         printMsg(msg);
     }
