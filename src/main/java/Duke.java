@@ -38,10 +38,31 @@ public class Duke {
         printMsg(msg);
     }
 
-    public static void addToList(String inputLine) {
-        Task newTask = new Task(inputLine);
+    public static void addToList(String command, String inputLine) {
+        String taskDescription = inputLine.substring(command.length());
+
+        // Consider using Case Statements
+        if (command.equals("todo")) {
+            addTodo(taskDescription);
+        } else {
+            ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
+                    "Invalid command given!"
+            ));
+            printMsg(msg);
+        }
+    }
+
+    public static void addTodo(String taskDescription) {
+        if (taskDescription.length() == 0) {
+            ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
+                    "Please specify the task you want to add!"
+            ));
+            printMsg(msg);
+            return;
+        }
+        Task newTask = new ToDos(taskDescription);
         list.add(newTask);
-        echo(inputLine);
+        echo(taskDescription);
     }
 
     public static void showList() {
@@ -88,7 +109,7 @@ public class Duke {
             if (inputLine.equals("list")) {
                 showList();
             } else {
-                addToList(inputLine);
+                addToList(inputArray[0], inputLine);
             }
 
         } else if (inputArray.length == 2) {
@@ -96,10 +117,10 @@ public class Duke {
             if (inputArray[0].equals("done")) {
                 completeTask(Integer.parseInt(inputArray[1]));
             } else {
-                addToList(inputLine);
+                addToList(inputArray[0], inputLine);
             }
         } else {
-            addToList(inputLine);
+            addToList(inputArray[0], inputLine);
         }
     }
 
