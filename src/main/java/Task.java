@@ -16,4 +16,11 @@ public class Task {
         isDone = true;
     }
 
+    public String getDate() {
+        return "";
+    }
+
+    public String getTask() {
+        return "[" + type + "][" + getStatusIcon() + "] " + description + getDate();
+    }
 }

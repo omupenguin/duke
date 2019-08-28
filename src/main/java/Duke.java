@@ -20,14 +20,22 @@ public class Duke {
                 "Hello! I'm Duke!",
                 "What can I do for you?"
         ));
+
+//        String msg = "     Hello! I'm Duke!\n"
+//                + "     What can I do for you?";
+
+//        String formatSpace = "     ";
+//        String msg = formatSpace + "Hello! I'm Duke!\n"
+//                + formatSpace + "What can I do for you?";
+
         printMsg(msg);
     }
 
     // Echoes when an item is added
-    public static void echoAdd(char type, String isDoneIcon, String taskDescription) {
+    public static void echoAdd(Task currTask) {
         ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
                 "Got it. I've added this task: ",
-                "  [" + type + "][" + isDoneIcon + "] " + taskDescription,
+                "  " + currTask.getTask(),
                 "Now you have " + list.size() + " task(s) in the list."
         ));
         printMsg(msg);
@@ -41,12 +49,17 @@ public class Duke {
     }
 
     public static void addToList(String command, String inputLine) {
+        String taskDescription = inputLine.length() != command.length()  // If there are no characters after command,
+                ? inputLine.substring(command.length()+1) : "";          // then description is empty
 
         // Consider using Case Statements
         if (command.equals("todo")) {
-            String taskDescription = inputLine.substring(command.length()+1);
             addTodo(taskDescription);
-        } else {
+        } else if (command.equals("event")) {
+            addEvent(taskDescription);
+        }
+
+        else {
             ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
                     "Invalid command given!"
             ));
@@ -62,10 +75,37 @@ public class Duke {
             printMsg(msg);
             return;
         }
-        Task newTask = new ToDos(taskDescription);
+        Task newTask = new ToDo(taskDescription);
         list.add(newTask);
 
-        echoAdd(newTask.type, newTask.getStatusIcon(), taskDescription);
+        echoAdd(newTask);
+    }
+
+    public static void addEvent(String taskDescription) {
+        String dateTrigger = "/at";
+        int dateIndex = taskDescription.indexOf(dateTrigger);
+        String[] data = taskDescription.split(dateTrigger + " ");
+
+        // Error Checking
+        boolean encounteredError = (taskDescription.length() == 0 || dateIndex == -1 || data.length < 2);
+        if (encounteredError) {
+            ArrayList<String> msg = new ArrayList<String>();
+            if (taskDescription.length() == 0) {
+                msg.add("Please specify the task you want to add!");
+            } else if (dateIndex == -1) {
+                msg.add("Please add '/at <date>' after your task to specify the event date." );
+            } else {
+                msg.add("Please specify the date of the event!");
+            }
+            printMsg(msg);
+            return;
+
+        } else {
+            Task newTask = new Event(data[0], data[1]);
+            list.add(newTask);
+            echoAdd(newTask);
+        }
+
     }
 
     public static void showList() {
@@ -73,7 +113,7 @@ public class Duke {
         msg.add("Here are the tasks in your list:");
         for (int i = 0; i < list.size(); i++) {
             Task currTask = list.get(i);
-            msg.add( (i+1) + ".[" + currTask.type + "][" + currTask.getStatusIcon() + "] " + currTask.description );
+            msg.add( (i+1) + "."  + currTask.getTask() );
         }
         printMsg(msg);
     }
@@ -96,7 +136,7 @@ public class Duke {
         } else {
             currTask.markAsDone();
             msg.add("Nice! I've marked this task as done:");
-            msg.add("  [" + currTask.type + "][\u2713] " + currTask.description);
+            msg.add("  " + currTask.getTask());
         }
         printMsg(msg);
     }
