@@ -57,6 +57,8 @@ public class Duke {
             addTodo(taskDescription);
         } else if (command.equals("event")) {
             addEvent(taskDescription);
+        } else if (command.equals("deadline")) {
+            addDeadline(taskDescription);
         }
 
         else {
@@ -95,7 +97,7 @@ public class Duke {
             } else if (dateIndex == -1) {
                 msg.add("Please add '/at <date>' after your task to specify the event date." );
             } else {
-                msg.add("Please specify the date of the event!");
+                msg.add("Please specify the event date!");
             }
             printMsg(msg);
             return;
@@ -105,7 +107,32 @@ public class Duke {
             list.add(newTask);
             echoAdd(newTask);
         }
+    }
 
+    public static void addDeadline(String taskDescription) {
+        String dateTrigger = "/by";
+        int dateIndex = taskDescription.indexOf(dateTrigger);
+        String[] data = taskDescription.split(dateTrigger + " ");
+
+        // Error Checking
+        boolean encounteredError = (taskDescription.length() == 0 || dateIndex == -1 || data.length < 2);
+        if (encounteredError) {
+            ArrayList<String> msg = new ArrayList<String>();
+            if (taskDescription.length() == 0) {
+                msg.add("Please specify the task you want to add!");
+            } else if (dateIndex == -1) {
+                msg.add("Please add '/by <date>' after your task to specify the deadline date." );
+            } else {
+                msg.add("Please specify the deadline date!");
+            }
+            printMsg(msg);
+            return;
+
+        } else {
+            Task newTask = new Deadline(data[0], data[1]);
+            list.add(newTask);
+            echoAdd(newTask);
+        }
     }
 
     public static void showList() {

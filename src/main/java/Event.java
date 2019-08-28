@@ -8,6 +8,7 @@ public class Event extends Task {
         this.at = date;
     }
 
+    @Override
     public String getDate() {
         return "(at: " + at + ")";
     }
