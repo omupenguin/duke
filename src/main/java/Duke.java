@@ -146,17 +146,35 @@ public class Duke {
     }
 
     // Need to find out how to only allow integers to pass thru :(
-    public static void completeTask(int listNum) {
+    public static void completeTask(String completedNum) {
+        int listNum = 0;
         ArrayList<String> msg = new ArrayList<String>();
 
-        // Failsafe in case zero or a number larger than provided tasks is given
-        if (listNum == 0 || listNum > list.size()) {
-            msg.add("There is no task associated to that number... yet! :)");
+        try {
+            listNum = Integer.parseInt(completedNum);
+        }
+        catch (NumberFormatException e) {
+            msg.add(completedNum + " is not a number. Please use a number instead!");
             printMsg(msg);
             return;
         }
 
-        Task currTask = list.get(listNum-1);
+        // Failsafe in case zero or a number larger than provided tasks is given
+//        if (listNum == 0 || listNum > list.size()) {
+//            msg.add("There is no task associated to that number... yet! :)");
+//            printMsg(msg);
+//            return;
+//        }
+        Task currTask = new Task("");
+        try {
+            currTask = list.get(listNum-1);
+        } catch (IndexOutOfBoundsException e) {
+            msg.add(completedNum + " is not associated to any task number.");
+            msg.add("Use 'list' to check the tasks that are here first!");
+            printMsg(msg);
+            return;
+        }
+
 
         if (currTask.isDone == true) {
             msg.add("Task " + listNum + " is already completed! :)");
@@ -185,7 +203,13 @@ public class Duke {
         } else if (inputArray.length == 2) {
 
             if (inputArray[0].equals("done")) {
-                completeTask(Integer.parseInt(inputArray[1]));
+//                if (inputArray.length != 2) {
+//                    ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
+//                            "Sorry, I only except this command in the format 'done <number>'. Any extra characters will not work. :("
+//                    ));
+//                    printMsg(msg);
+//                }
+                completeTask(inputArray[1]);
             } else {
                 addToList(inputArray[0], inputLine);
             }
