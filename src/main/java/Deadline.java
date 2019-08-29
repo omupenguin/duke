@@ -13,4 +13,8 @@ public class Deadline extends Task {
         return "(by: " + by + ")";
     }
 
+    @Override
+    public String formatDateSave() {
+        return " | " + by;
+    }
 }

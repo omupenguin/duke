@@ -23,4 +23,12 @@ public class Task {
     public String getTask() {
         return "[" + type + "][" + getStatusIcon() + "] " + description + getDate();
     }
+
+    public String formatDateSave() {
+        return "";
+    }
+
+    public String formatSave() {
+        return type + " | " + (isDone ? 1 : 0) + " | " + description + formatDateSave();
+    }
 }
