@@ -1,3 +1,7 @@
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
 public class Task {
     protected String description;
     protected boolean isDone;
@@ -18,6 +22,12 @@ public class Task {
 
     public String getDate() {
         return "";
+    }
+
+    public String timeToString(LocalDateTime time) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm", Locale.ENGLISH);
+        String timeStr = time.format(formatter);
+        return timeStr;
     }
 
     public String getTask() {

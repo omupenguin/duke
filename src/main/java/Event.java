@@ -1,8 +1,10 @@
+import java.time.LocalDateTime;
+
 public class Event extends Task {
 
-    protected String at;
+    protected LocalDateTime at;
 
-    public Event(String description, String date) {
+    public Event(String description, LocalDateTime date) {
         super(description);
         type = 'E';
         this.at = date;
@@ -10,11 +12,13 @@ public class Event extends Task {
 
     @Override
     public String getDate() {
-        return "(at: " + at + ")";
+        String atStr = timeToString(at);
+        return "(at: " + atStr + ")";
     }
 
     @Override
     public String formatDateSave() {
-        return " | " + at;
+        String atStr = timeToString(at);
+        return " | " + atStr;
     }
 }

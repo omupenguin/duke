@@ -1,8 +1,10 @@
+import java.time.LocalDateTime;
+
 public class Deadline extends Task {
 
-    protected String by;
+    protected LocalDateTime by;
 
-    public Deadline(String description, String date) {
+    public Deadline(String description, LocalDateTime date) {
         super(description);
         type = 'D';
         this.by = date;
@@ -10,11 +12,13 @@ public class Deadline extends Task {
 
     @Override
     public String getDate () {
-        return "(by: " + by + ")";
+        String byStr = timeToString(by);
+        return "(by: " + byStr + ")";
     }
 
     @Override
     public String formatDateSave() {
-        return " | " + by;
+        String byStr = timeToString(by);
+        return " | " + byStr;
     }
 }

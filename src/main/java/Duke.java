@@ -1,5 +1,9 @@
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -27,21 +31,21 @@ public class Duke {
             BufferedReader inStream = new BufferedReader(inFile);
             msg.add("Your save data has been loaded :)");
             String inLine;
-//            System.out.println("Trying to load file now...");
+//            System.out.println("Trying to load file now..."); // DEBUG
 
             while ((inLine = inStream.readLine()) != null) {
-//                System.out.println(("Adding a task..."));
                 String[] inArray = inLine.split(" \\| ");
-//                System.out.println(Arrays.toString(inArray));
+//                System.out.println(("Adding a task...")); // DEBUG
+//                System.out.println(Arrays.toString(inArray)); // DEBUG
                 String type = inArray[0];
                 Task newTask = null;
 
                 if (type.equals("T")) {
                     newTask = new ToDo(inArray[2]);
                 } else if (type.equals("E")) {
-                    newTask = new Event(inArray[2], inArray[3]);
+                    newTask = new Event(inArray[2], readTime(inArray[3]));
                 } else if (type.equals("D")) {
-                    newTask = new Deadline(inArray[2], inArray[3]);
+                    newTask = new Deadline(inArray[2], readTime(inArray[3]));
                 }
 
                 if (inArray[1].equals("1")) {
@@ -119,9 +123,10 @@ public class Duke {
         String dateTrigger = "/at";
         int dateIndex = taskDescription.indexOf(dateTrigger);
         String[] data = taskDescription.split(dateTrigger + " ");
+        LocalDateTime time = (data.length != 1) ? readTime(data[1]) : null;
 
         // Error Checking
-        boolean encounteredError = (taskDescription.length() == 0 || dateIndex == -1 || data.length < 2);
+        boolean encounteredError = (taskDescription.length() == 0 || dateIndex == -1 || data.length < 2 || time == null);
         if (encounteredError) {
             ArrayList<String> msg = new ArrayList<String>();
             if (taskDescription.length() == 0) {
@@ -129,13 +134,13 @@ public class Duke {
             } else if (dateIndex == -1) {
                 msg.add("Please add '/at <date>' after your task to specify the event date." );
             } else {
-                msg.add("Please specify the event date!");
+                msg.add("Please use the format 'DD/MM/YYYY HHmm'!");
             }
             printMsg(msg);
             return;
 
         } else {
-            Task newTask = new Event(data[0], data[1]);
+            Task newTask = new Event(data[0], time);
             list.add(newTask);
             echoAdd(newTask);
         }
@@ -145,9 +150,10 @@ public class Duke {
         String dateTrigger = "/by";
         int dateIndex = taskDescription.indexOf(dateTrigger);
         String[] data = taskDescription.split(dateTrigger + " ");
+        LocalDateTime time = (data.length != 1) ? readTime(data[1]) : null;
 
         // Error Checking
-        boolean encounteredError = (taskDescription.length() == 0 || dateIndex == -1 || data.length < 2);
+        boolean encounteredError = (taskDescription.length() == 0 || dateIndex == -1 || data.length < 2 || time == null);
         if (encounteredError) {
             ArrayList<String> msg = new ArrayList<String>();
             if (taskDescription.length() == 0) {
@@ -155,13 +161,13 @@ public class Duke {
             } else if (dateIndex == -1) {
                 msg.add("Please add '/by <date>' after your task to specify the deadline date." );
             } else {
-                msg.add("Please specify the deadline date!");
+                msg.add("Please use the format 'DD/MM/YYYY HHmm'!");
             }
             printMsg(msg);
             return;
 
         } else {
-            Task newTask = new Deadline(data[0], data[1]);
+            Task newTask = new Deadline(data[0], time);
             list.add(newTask);
             echoAdd(newTask);
         }
@@ -261,6 +267,30 @@ public class Duke {
         } catch (IOException e) {
             System.out.println("***Error writing to duke.txt***");
             // exception handling
+        }
+    }
+
+    public static LocalDateTime readTime(String timeStr) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm", Locale.ENGLISH);
+            LocalDateTime time = LocalDateTime.parse(timeStr, formatter);
+//            System.out.println(time);
+            return time;
+        } catch(DateTimeParseException e) {
+//            System.out.println("This format is not okay!");
+            return null;
+        }
+    }
+
+    public static LocalDateTime importTime(String timeStr) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm", Locale.ENGLISH);
+            LocalDateTime time = LocalDateTime.parse(timeStr, formatter);
+//            System.out.println(time);
+            return time;
+        } catch(DateTimeParseException e) {
+//            System.out.println("This format is not okay!");
+            return null;
         }
     }
 
