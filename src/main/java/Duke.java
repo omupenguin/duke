@@ -173,6 +173,38 @@ public class Duke {
         }
     }
 
+    public static void removeTask(String taskNum) {
+        // Duplicate code with completeTask
+        // Can make a class called "parseInt" or something :D
+        int taskNumInt = 0;
+        ArrayList<String> msg = new ArrayList<String>();
+
+        try {
+            taskNumInt = Integer.parseInt(taskNum);
+        }
+        catch (NumberFormatException e) {
+            msg.add(taskNum + " is not a number. Please use a number instead!");
+            printMsg(msg);
+            return;
+        }
+
+        try {
+            list.get(taskNumInt-1); // Check if the task exists first
+            msg.add("Noted. I've removed this task: ");
+            msg.add("  " + list.get(taskNumInt-1).getTask());
+            list.remove(taskNumInt-1);
+            msg.add("Now you have " + list.size() + " tasks in the list.");
+        }
+        catch (IndexOutOfBoundsException e) {
+            msg.add(taskNum + " is not associated to any task number.");
+            msg.add("Use 'list' to check the tasks that are here first!");
+            printMsg(msg);
+            return;
+        }
+
+        printMsg(msg);
+    }
+
     public static void showList() {
         ArrayList<String> msg = new ArrayList<String>();
         msg.add("Here are the tasks in your list:");
@@ -197,12 +229,6 @@ public class Duke {
             return;
         }
 
-        // Failsafe in case zero or a number larger than provided tasks is given
-//        if (listNum == 0 || listNum > list.size()) {
-//            msg.add("There is no task associated to that number... yet! :)");
-//            printMsg(msg);
-//            return;
-//        }
         Task currTask = new Task("");
         try {
             currTask = list.get(listNum-1);
@@ -212,7 +238,6 @@ public class Duke {
             printMsg(msg);
             return;
         }
-
 
         if (currTask.isDone == true) {
             msg.add("Task " + listNum + " is already completed! :)");
@@ -241,13 +266,9 @@ public class Duke {
         } else if (inputArray.length == 2) {
 
             if (inputArray[0].equals("done")) {
-//                if (inputArray.length != 2) {
-//                    ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
-//                            "Sorry, I only except this command in the format 'done <number>'. Any extra characters will not work. :("
-//                    ));
-//                    printMsg(msg);
-//                }
                 completeTask(inputArray[1]);
+            } else if (inputArray[0].equals("remove")) {
+                removeTask(inputArray[1]);
             } else {
                 addToList(inputArray[0], inputLine);
             }
