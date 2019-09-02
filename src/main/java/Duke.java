@@ -183,6 +183,30 @@ public class Duke {
         printMsg(msg);
     }
 
+    public static void findString (String command, String inputLine) {
+        String searchStr = inputLine.length() != command.length()  // If there are no characters after command,
+                ? inputLine.substring(command.length()+1) : "";          // then description is empty
+        ArrayList<String> itemsFound = new ArrayList<String>();
+        ArrayList<String> msg = new ArrayList<String>();
+        for (Task currTask : list) {
+            String taskStr = currTask.getTask();
+            if (taskStr.indexOf(searchStr) != -1) {
+                itemsFound.add(taskStr);
+            }
+        }
+
+        if (itemsFound.isEmpty()) {
+            msg.add("There are no matching tasks in your list :(");
+        } else {
+            msg.add("Here are the matching tasks in your list:");
+            for (int i = 0; i < itemsFound.size(); i++) {
+                msg.add( (i+1) + "."  + itemsFound.get(i) );
+            }
+        }
+
+        printMsg(msg);
+    }
+
     // Need to find out how to only allow integers to pass thru :(
     public static void completeTask(String completedNum) {
         int listNum = 0;
@@ -248,9 +272,13 @@ public class Duke {
 //                    printMsg(msg);
 //                }
                 completeTask(inputArray[1]);
+            } else if (inputArray[0].equals("find")) {
+                findString(inputArray[0], inputLine);
             } else {
                 addToList(inputArray[0], inputLine);
             }
+        } else if (inputArray[0].equals("find")) {
+            findString(inputArray[0], inputLine);
         } else {
             addToList(inputArray[0], inputLine);
         }
