@@ -2,6 +2,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Ui {
+
+    protected ArrayList<String> messageArray;
+
     // Print out message with formatting already done
     public static void printMsg(ArrayList<String> msg) {
         System.out.println("    ____________________________________________________________");

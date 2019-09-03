@@ -17,60 +17,12 @@ public class Duke {
 
     public static ArrayList<Task> list = new ArrayList<Task>();
 
-    public static void startup() {
-        ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
-                "Hello! I'm Duke! I help keep track of your tasks!",
-                "What can I do for you?"
-        ));
-
-        try {
-            FileReader inFile = new FileReader("./data/duke.txt");
-            BufferedReader inStream = new BufferedReader(inFile);
-            msg.add("Your save data has been loaded :)");
-            String inLine;
-//            System.out.println("Trying to load file now..."); // DEBUG
-
-            while ((inLine = inStream.readLine()) != null) {
-                String[] inArray = inLine.split(" \\| ");
-//                System.out.println(("Adding a task...")); // DEBUG
-//                System.out.println(Arrays.toString(inArray)); // DEBUG
-                String type = inArray[0];
-                Task newTask = null;
-
-                if (type.equals("T")) {
-                    newTask = new ToDo(inArray[2]);
-                } else if (type.equals("E")) {
-                    newTask = new Event(inArray[2], readTime(inArray[3]));
-                } else if (type.equals("D")) {
-                    newTask = new Deadline(inArray[2], readTime(inArray[3]));
-                }
-
-                if (inArray[1].equals("1")) {
-                    newTask.markAsDone();
-                }
-                list.add(newTask);
-            }
-
-        } catch (FileNotFoundException e) {
-            // exception handling
-//            System.out.println("*** File not found :( ***");
-            msg.add("Looks like it's your first time, let me create a save file for you :)");
-        } catch (IOException e) {
-            // exception handling
-            System.out.println("*** there was an error reading duke.txt ***");
-        }
-
-        Ui.printMsg(msg);
-    }
-
-
-
     public static void exit() {
         ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
                 "Bye. Hope to see you again soon!"
         ));
         Ui.printMsg(msg);
-        save();
+        Storage.save(list);
     }
 
     public static void addToList(String command, String inputLine) {
@@ -285,33 +237,9 @@ public class Duke {
         }
     }
 
-    public static void save() {
-        try(FileWriter file = new FileWriter("./data/duke.txt")) {
-            for (Task currTask : list) {
-                String fileContent = currTask.formatSave();
-                file.write(fileContent);
-                file.write(System.lineSeparator());
-            }
-//            System.out.println("saved"); // DEBUG
-        } catch (IOException e) {
-            System.out.println("***Error writing to duke.txt***");
-            // exception handling
-        }
-    }
+
 
     public static LocalDateTime readTime(String timeStr) {
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm", Locale.ENGLISH);
-            LocalDateTime time = LocalDateTime.parse(timeStr, formatter);
-//            System.out.println(time);
-            return time;
-        } catch(DateTimeParseException e) {
-//            System.out.println("This format is not okay!");
-            return null;
-        }
-    }
-
-    public static LocalDateTime importTime(String timeStr) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm", Locale.ENGLISH);
             LocalDateTime time = LocalDateTime.parse(timeStr, formatter);
@@ -331,7 +259,7 @@ public class Duke {
                 + "|____/ \\__,_|_|\\_\\___|\n";
         System.out.println("Hello from\n" + logo);
 
-        startup();
+        list = Storage.load();
 
         boolean isExit = false;
         Scanner input = new Scanner(System.in);
@@ -343,7 +271,7 @@ public class Duke {
                     exit();
                 } else {
                     handleInput(inputLine);
-                    save();
+                    Storage.save(list);
                 }
             }
         }
