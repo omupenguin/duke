@@ -9,16 +9,13 @@ import java.util.ArrayList;
 
 public class Duke {
 
-    public static ArrayList<Task> list = new ArrayList<Task>();
+//    private Ui ui;
+//
+//    public Duke() {
+//        ui = new Ui();
+//    }
 
-    // Print out message with formatting already done
-    public static void printMsg(ArrayList<String> msg) {
-        System.out.println("    ____________________________________________________________");
-        for (String outputMsg : msg) {
-            System.out.println("     " + outputMsg);
-        }
-        System.out.println("    ____________________________________________________________\n");
-    }
+    public static ArrayList<Task> list = new ArrayList<Task>();
 
     public static void startup() {
         ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
@@ -63,24 +60,16 @@ public class Duke {
             System.out.println("*** there was an error reading duke.txt ***");
         }
 
-        printMsg(msg);
+        Ui.printMsg(msg);
     }
 
-    // Echoes when an item is added
-    public static void echoAdd(Task currTask) {
-        ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
-                "Got it. I've added this task: ",
-                "  " + currTask.getTask(),
-                "Now you have " + list.size() + " task(s) in the list."
-        ));
-        printMsg(msg);
-    }
+
 
     public static void exit() {
         ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
                 "Bye. Hope to see you again soon!"
         ));
-        printMsg(msg);
+        Ui.printMsg(msg);
         save();
     }
 
@@ -101,7 +90,7 @@ public class Duke {
             ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
                     "Invalid command given!"
             ));
-            printMsg(msg);
+            Ui.printMsg(msg);
         }
     }
 
@@ -110,13 +99,13 @@ public class Duke {
             ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
                     "Please specify the task you want to add!"
             ));
-            printMsg(msg);
+            Ui.printMsg(msg);
             return;
         }
         Task newTask = new ToDo(taskDescription);
         list.add(newTask);
 
-        echoAdd(newTask);
+        Ui.echoAdd(newTask, list.size());
     }
 
     public static void addEvent(String taskDescription) {
@@ -136,13 +125,13 @@ public class Duke {
             } else {
                 msg.add("Please use the format 'DD/MM/YYYY HHmm'!");
             }
-            printMsg(msg);
+            Ui.printMsg(msg);
             return;
 
         } else {
             Task newTask = new Event(data[0], time);
             list.add(newTask);
-            echoAdd(newTask);
+            Ui.echoAdd(newTask, list.size());
         }
     }
 
@@ -163,13 +152,13 @@ public class Duke {
             } else {
                 msg.add("Please use the format 'DD/MM/YYYY HHmm'!");
             }
-            printMsg(msg);
+            Ui.printMsg(msg);
             return;
 
         } else {
             Task newTask = new Deadline(data[0], time);
             list.add(newTask);
-            echoAdd(newTask);
+            Ui.echoAdd(newTask, list.size());
         }
     }
 
@@ -184,7 +173,7 @@ public class Duke {
         }
         catch (NumberFormatException e) {
             msg.add(taskNum + " is not a number. Please use a number instead!");
-            printMsg(msg);
+            Ui.printMsg(msg);
             return;
         }
 
@@ -198,11 +187,11 @@ public class Duke {
         catch (IndexOutOfBoundsException e) {
             msg.add(taskNum + " is not associated to any task number.");
             msg.add("Use 'list' to check the tasks that are here first!");
-            printMsg(msg);
+            Ui.printMsg(msg);
             return;
         }
 
-        printMsg(msg);
+        Ui.printMsg(msg);
     }
 
     public static void showList() {
@@ -212,7 +201,7 @@ public class Duke {
             Task currTask = list.get(i);
             msg.add( (i+1) + "."  + currTask.getTask() );
         }
-        printMsg(msg);
+        Ui.printMsg(msg);
     }
 
     public static void findString (String command, String inputLine) {
@@ -236,7 +225,7 @@ public class Duke {
             }
         }
 
-        printMsg(msg);
+        Ui.printMsg(msg);
     }
 
     // Need to find out how to only allow integers to pass thru :(
@@ -249,7 +238,7 @@ public class Duke {
         }
         catch (NumberFormatException e) {
             msg.add(completedNum + " is not a number. Please use a number instead!");
-            printMsg(msg);
+            Ui.printMsg(msg);
             return;
         }
 
@@ -259,7 +248,7 @@ public class Duke {
         } catch (IndexOutOfBoundsException e) {
             msg.add(completedNum + " is not associated to any task number.");
             msg.add("Use 'list' to check the tasks that are here first!");
-            printMsg(msg);
+            Ui.printMsg(msg);
             return;
         }
 
@@ -270,7 +259,7 @@ public class Duke {
             msg.add("Nice! I've marked this task as done:");
             msg.add("  " + currTask.getTask());
         }
-        printMsg(msg);
+        Ui.printMsg(msg);
     }
 
     public static void handleInput(String inputLine) {
