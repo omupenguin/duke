@@ -275,33 +275,24 @@ public class Duke {
 
     public static void handleInput(String inputLine) {
         String[] inputArray = inputLine.split(" ");
+        String command = inputArray[0];
 
-        // Some improvements that can be made:
-        // We can ignore the length if we can ignore the rest of the contents after the
-        // first word. So just check inputArray[0] and determine function from there.
-        if (inputArray.length == 1) {
-
-            if (inputLine.equals("list")) {
+        switch (command) {
+            case "list":
                 showList();
-            } else {
-                addToList(inputArray[0], inputLine);
-            }
-
-        } else if (inputArray.length == 2) {
-
-            if (inputArray[0].equals("done")) {
+                break;
+            case "done":
                 completeTask(inputArray[1]);
-            } else if (inputArray[0].equals("remove")) {
+                break;
+            case "remove":
                 removeTask(inputArray[1]);
-            } else if (inputArray[0].equals("find")) {
-                findString(inputArray[0], inputLine);
-            } else {
-                addToList(inputArray[0], inputLine);
-            }
-        } else if (inputArray[0].equals("find")) {
-            findString(inputArray[0], inputLine);
-        } else {
-            addToList(inputArray[0], inputLine);
+                break;
+            case "find":
+                findString(command, inputLine);
+                break;
+            default:
+                addToList(command, inputLine);
+                break;
         }
     }
 
