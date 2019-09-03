@@ -354,15 +354,17 @@ public class Duke {
         startup();
 
         boolean isExit = false;
+        Scanner input = new Scanner(System.in);
         while (isExit == false) {
-            Scanner input = new Scanner(System.in);
-            String inputLine = input.nextLine();
-            if (inputLine.equals("bye")) {
-                isExit = true;
-                exit();
-            } else {
-                handleInput(inputLine);
-                save();
+            if (input.hasNextLine()) {
+                String inputLine = input.nextLine();
+                if (inputLine.equals("bye")) {
+                    isExit = true;
+                    exit();
+                } else {
+                    handleInput(inputLine);
+                    save();
+                }
             }
         }
 
