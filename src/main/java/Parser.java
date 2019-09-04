@@ -27,33 +27,39 @@ public class Parser {
         }
     }
 
+    public static void addToList(String command, String inputLine, TaskList tasks) {
+//        String taskDescription = inputLine.length() != command.length()  // If there are no characters after command,
+//                ? inputLine.substring(command.length()+1) : "";          // then description is empty
+        String taskDescription;
+
+        try {
+            taskDescription = inputLine.substring(command.length()+1);
+            switch (command) {
+                case "todo":
+                    addTodo(taskDescription, tasks);
+                    break;
+                case "event":
+                    addEvent(taskDescription, tasks);
+                    break;
+                case "deadline":
+                    addDeadline(taskDescription, tasks);
+                    break;
+            }
+        } catch (IndexOutOfBoundsException e) {
+            ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
+                    "Invalid command given!"
+            ));
+            Ui.printMsg(msg);
+        }
+
+    }
+
     public static void exit() {
         ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
                 "Bye. Hope to see you again soon!"
         ));
         Ui.printMsg(msg);
         //Storage.save(tasks); // Don't need to save since any previous commands are already saved
-    }
-
-    public static void addToList(String command, String inputLine, TaskList tasks) {
-        String taskDescription = inputLine.length() != command.length()  // If there are no characters after command,
-                ? inputLine.substring(command.length()+1) : "";          // then description is empty
-
-        // Consider using Case Statements
-        if (command.equals("todo")) {
-            addTodo(taskDescription, tasks);
-        } else if (command.equals("event")) {
-            addEvent(taskDescription, tasks);
-        } else if (command.equals("deadline")) {
-            addDeadline(taskDescription, tasks);
-        }
-
-        else {
-            ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
-                    "Invalid command given!"
-            ));
-            Ui.printMsg(msg);
-        }
     }
 
     public static void addTodo(String taskDescription, TaskList tasks) {
@@ -190,7 +196,6 @@ public class Parser {
         Ui.printMsg(msg);
     }
 
-    // Need to find out how to only allow integers to pass thru :(
     public static void completeTask(String completedNum, TaskList tasks) {
         int listNum = 0;
         ArrayList<String> msg = new ArrayList<String>();
