@@ -80,7 +80,7 @@ public class Duke {
         String dateTrigger = "/at";
         int dateIndex = taskDescription.indexOf(dateTrigger);
         String[] data = taskDescription.split(dateTrigger + " ");
-        LocalDateTime time = (data.length != 1) ? readTime(data[1]) : null;
+        LocalDateTime time = (data.length != 1) ? Time.readTime(data[1]) : null;
 
         // Error Checking
         boolean encounteredError = (taskDescription.length() == 0 || dateIndex == -1 || data.length < 2 || time == null);
@@ -107,7 +107,7 @@ public class Duke {
         String dateTrigger = "/by";
         int dateIndex = taskDescription.indexOf(dateTrigger);
         String[] data = taskDescription.split(dateTrigger + " ");
-        LocalDateTime time = (data.length != 1) ? readTime(data[1]) : null;
+        LocalDateTime time = (data.length != 1) ? Time.readTime(data[1]) : null;
 
         // Error Checking
         boolean encounteredError = (taskDescription.length() == 0 || dateIndex == -1 || data.length < 2 || time == null);
@@ -228,18 +228,6 @@ public class Duke {
             msg.add("  " + currTask.getTask());
         }
         Ui.printMsg(msg);
-    }
-
-    public static LocalDateTime readTime(String timeStr) {
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm", Locale.ENGLISH);
-            LocalDateTime time = LocalDateTime.parse(timeStr, formatter);
-//            System.out.println(time);
-            return time;
-        } catch(DateTimeParseException e) {
-//            System.out.println("This format is not okay!");
-            return null;
-        }
     }
 
     public static void main(String[] args) {
