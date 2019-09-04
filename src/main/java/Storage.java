@@ -48,7 +48,7 @@ public class Storage {
         } catch (IOException e) {
             // exception handling
             System.out.println("*** there was an error reading duke.txt ***");
-            Duke.exit(); // TODO: Find out what is supposed to happen here
+            Parser.exit(); // TODO: Find out what is supposed to happen here
         }
 
         Ui.printMsg(msg);
