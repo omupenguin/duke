@@ -8,33 +8,50 @@ import java.util.ArrayList;
 
 public class Duke {
 
-//    private Ui ui;
-//
-//    public Duke() {
-//        ui = new Ui();
-//    }
+    private TaskList tasks;
 
-    public static ArrayList<Task> list = new ArrayList<Task>();
+    public Duke() {
+        tasks = new TaskList(Storage.load());
+    }
+
+    public void run() {
+
+//        Ui.showWelcome(); // inside Storage
+        boolean isExit = false;
+        Scanner input = new Scanner(System.in); // TODO: Add to Ui instead?
+        while (isExit == false) {
+            if (input.hasNextLine()) {
+                String inputLine = input.nextLine();
+                if (inputLine.equals("bye")) {
+                    isExit = true;
+                    exit();
+                } else {
+                    Parser.handleInput(inputLine, tasks);
+                    Storage.save(tasks.list);
+                }
+            }
+        }
+    }
 
     public static void exit() {
         ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
                 "Bye. Hope to see you again soon!"
         ));
         Ui.printMsg(msg);
-        Storage.save(list);
+        //Storage.save(tasks); // Don't need to save since any previous commands are already saved
     }
 
-    public static void addToList(String command, String inputLine) {
+    public static void addToList(String command, String inputLine, TaskList tasks) {
         String taskDescription = inputLine.length() != command.length()  // If there are no characters after command,
                 ? inputLine.substring(command.length()+1) : "";          // then description is empty
 
         // Consider using Case Statements
         if (command.equals("todo")) {
-            addTodo(taskDescription);
+            addTodo(taskDescription, tasks);
         } else if (command.equals("event")) {
-            addEvent(taskDescription);
+            addEvent(taskDescription, tasks);
         } else if (command.equals("deadline")) {
-            addDeadline(taskDescription);
+            addDeadline(taskDescription, tasks);
         }
 
         else {
@@ -45,7 +62,7 @@ public class Duke {
         }
     }
 
-    public static void addTodo(String taskDescription) {
+    public static void addTodo(String taskDescription, TaskList tasks) {
         if (taskDescription.length() == 0) {
             ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
                     "Please specify the task you want to add!"
@@ -54,12 +71,12 @@ public class Duke {
             return;
         }
         Task newTask = new ToDo(taskDescription);
-        list.add(newTask);
+        tasks.add(newTask);
 
-        Ui.echoAdd(newTask, list.size());
+        Ui.echoAdd(newTask, tasks.size());
     }
 
-    public static void addEvent(String taskDescription) {
+    public static void addEvent(String taskDescription, TaskList tasks) {
         String dateTrigger = "/at";
         int dateIndex = taskDescription.indexOf(dateTrigger);
         String[] data = taskDescription.split(dateTrigger + " ");
@@ -81,12 +98,12 @@ public class Duke {
 
         } else {
             Task newTask = new Event(data[0], time);
-            list.add(newTask);
-            Ui.echoAdd(newTask, list.size());
+            tasks.add(newTask);
+            Ui.echoAdd(newTask, tasks.size());
         }
     }
 
-    public static void addDeadline(String taskDescription) {
+    public static void addDeadline(String taskDescription, TaskList tasks) {
         String dateTrigger = "/by";
         int dateIndex = taskDescription.indexOf(dateTrigger);
         String[] data = taskDescription.split(dateTrigger + " ");
@@ -108,12 +125,12 @@ public class Duke {
 
         } else {
             Task newTask = new Deadline(data[0], time);
-            list.add(newTask);
-            Ui.echoAdd(newTask, list.size());
+            tasks.add(newTask);
+            Ui.echoAdd(newTask, tasks.size());
         }
     }
 
-    public static void removeTask(String taskNum) {
+    public static void removeTask(String taskNum, TaskList tasks) {
         // Duplicate code with completeTask
         // Can make a class called "parseInt" or something :D
         int taskNumInt = 0;
@@ -129,11 +146,11 @@ public class Duke {
         }
 
         try {
-            list.get(taskNumInt-1); // Check if the task exists first
+            tasks.getFromList(taskNumInt-1); // Check if the task exists first
             msg.add("Noted. I've removed this task: ");
-            msg.add("  " + list.get(taskNumInt-1).getTask());
-            list.remove(taskNumInt-1);
-            msg.add("Now you have " + list.size() + " tasks in the list.");
+            msg.add("  " + tasks.getFromList(taskNumInt-1).getTask());
+            tasks.removeFromList(taskNumInt-1);
+            msg.add("Now you have " + tasks.size() + " tasks in the list.");
         }
         catch (IndexOutOfBoundsException e) {
             msg.add(taskNum + " is not associated to any task number.");
@@ -145,22 +162,22 @@ public class Duke {
         Ui.printMsg(msg);
     }
 
-    public static void showList() {
+    public static void showList(TaskList tasks) {
         ArrayList<String> msg = new ArrayList<String>();
         msg.add("Here are the tasks in your list:");
-        for (int i = 0; i < list.size(); i++) {
-            Task currTask = list.get(i);
+        for (int i = 0; i < tasks.size(); i++) {
+            Task currTask = tasks.getFromList(i);
             msg.add( (i+1) + "."  + currTask.getTask() );
         }
         Ui.printMsg(msg);
     }
 
-    public static void findString (String command, String inputLine) {
+    public static void findString (String command, String inputLine, TaskList tasks) {
         String searchStr = inputLine.length() != command.length()  // If there are no characters after command,
                 ? inputLine.substring(command.length()+1) : "";          // then description is empty
         ArrayList<String> itemsFound = new ArrayList<String>();
         ArrayList<String> msg = new ArrayList<String>();
-        for (Task currTask : list) {
+        for (Task currTask : tasks.list) {
             String taskStr = currTask.getTask();
             if (taskStr.indexOf(searchStr) != -1) {
                 itemsFound.add(taskStr);
@@ -180,7 +197,7 @@ public class Duke {
     }
 
     // Need to find out how to only allow integers to pass thru :(
-    public static void completeTask(String completedNum) {
+    public static void completeTask(String completedNum, TaskList tasks) {
         int listNum = 0;
         ArrayList<String> msg = new ArrayList<String>();
 
@@ -195,7 +212,7 @@ public class Duke {
 
         Task currTask = new Task("");
         try {
-            currTask = list.get(listNum-1);
+            currTask = tasks.getFromList(listNum-1);
         } catch (IndexOutOfBoundsException e) {
             msg.add(completedNum + " is not associated to any task number.");
             msg.add("Use 'list' to check the tasks that are here first!");
@@ -226,24 +243,6 @@ public class Duke {
     }
 
     public static void main(String[] args) {
-
-        Ui.showWelcome();
-        list = Storage.load();
-
-        boolean isExit = false;
-        Scanner input = new Scanner(System.in);
-        while (isExit == false) {
-            if (input.hasNextLine()) {
-                String inputLine = input.nextLine();
-                if (inputLine.equals("bye")) {
-                    isExit = true;
-                    exit();
-                } else {
-                    Parser.handleInput(inputLine);
-                    Storage.save(list);
-                }
-            }
-        }
-
+        new Duke().run();
     }
 }

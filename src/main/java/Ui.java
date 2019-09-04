@@ -32,4 +32,8 @@ public class Ui {
         ));
         printMsg(msg);
     }
+
+    public static void showLine() {
+        System.out.println("    ____________________________________________________________");
+    }
 }

@@ -7,6 +7,7 @@ public class Storage {
     public static ArrayList<Task> load() {
         ArrayList<Task> list = new ArrayList<Task>();
 
+        Ui.showWelcome();
         ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
                 "Hello! I'm Duke! I help keep track of your tasks!",
                 "What can I do for you?"
