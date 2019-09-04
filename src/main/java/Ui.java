@@ -5,6 +5,15 @@ public class Ui {
 
     protected ArrayList<String> messageArray;
 
+    public static void showWelcome() {
+        String logo = " ____        _        \n"
+                + "|  _ \\ _   _| | _____ \n"
+                + "| | | | | | | |/ / _ \\\n"
+                + "| |_| | |_| |   <  __/\n"
+                + "|____/ \\__,_|_|\\_\\___|\n";
+        System.out.println("Hello from\n" + logo);
+    }
+
     // Print out message with formatting already done
     public static void printMsg(ArrayList<String> msg) {
         System.out.println("    ____________________________________________________________");

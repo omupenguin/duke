@@ -1,4 +1,3 @@
-import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -214,31 +213,6 @@ public class Duke {
         Ui.printMsg(msg);
     }
 
-    public static void handleInput(String inputLine) {
-        String[] inputArray = inputLine.split(" ");
-        String command = inputArray[0];
-
-        switch (command) {
-            case "list":
-                showList();
-                break;
-            case "done":
-                completeTask(inputArray[1]);
-                break;
-            case "remove":
-                removeTask(inputArray[1]);
-                break;
-            case "find":
-                findString(command, inputLine);
-                break;
-            default:
-                addToList(command, inputLine);
-                break;
-        }
-    }
-
-
-
     public static LocalDateTime readTime(String timeStr) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm", Locale.ENGLISH);
@@ -252,13 +226,8 @@ public class Duke {
     }
 
     public static void main(String[] args) {
-        String logo = " ____        _        \n"
-                + "|  _ \\ _   _| | _____ \n"
-                + "| | | | | | | |/ / _ \\\n"
-                + "| |_| | |_| |   <  __/\n"
-                + "|____/ \\__,_|_|\\_\\___|\n";
-        System.out.println("Hello from\n" + logo);
 
+        Ui.showWelcome();
         list = Storage.load();
 
         boolean isExit = false;
@@ -270,7 +239,7 @@ public class Duke {
                     isExit = true;
                     exit();
                 } else {
-                    handleInput(inputLine);
+                    Parser.handleInput(inputLine);
                     Storage.save(list);
                 }
             }
