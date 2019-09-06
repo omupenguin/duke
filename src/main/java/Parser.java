@@ -10,8 +10,7 @@ public class Parser {
 
         switch (command) {
             case "list":
-                showList(tasks);
-                break;
+                return new ShowListCommand();
             case "done":
                 completeTask(inputArray[1], tasks);
                 break;
@@ -60,34 +59,6 @@ public class Parser {
         //Storage.save(tasks); // Don't need to save since any previous commands are already saved
     }
 
-
-    public static void addDeadline(String taskDescription, TaskList tasks) {
-        String dateTrigger = "/by";
-        int dateIndex = taskDescription.indexOf(dateTrigger);
-        String[] data = taskDescription.split(dateTrigger + " ");
-        LocalDateTime time = (data.length != 1) ? Time.readTime(data[1]) : null;
-
-        // Error Checking
-        boolean encounteredError = (taskDescription.length() == 0 || dateIndex == -1 || data.length < 2 || time == null);
-        if (encounteredError) {
-            ArrayList<String> msg = new ArrayList<String>();
-            if (taskDescription.length() == 0) {
-                msg.add("Please specify the task you want to add!");
-            } else if (dateIndex == -1) {
-                msg.add("Please add '/by <date>' after your task to specify the deadline date." );
-            } else {
-                msg.add("Please use the format 'DD/MM/YYYY HHmm'!");
-            }
-            Ui.printMsg(msg);
-            return;
-
-        } else {
-            Task newTask = new Deadline(data[0], time);
-            tasks.add(newTask);
-            Ui.echoAdd(newTask, tasks.size());
-        }
-    }
-
     public static void removeTask(String taskNum, TaskList tasks) {
         // Duplicate code with completeTask
         // Can make a class called "parseInt" or something :D
@@ -117,16 +88,6 @@ public class Parser {
             return;
         }
 
-        Ui.printMsg(msg);
-    }
-
-    public static void showList(TaskList tasks) {
-        ArrayList<String> msg = new ArrayList<String>();
-        msg.add("Here are the tasks in your list:");
-        for (int i = 0; i < tasks.size(); i++) {
-            Task currTask = tasks.getFromList(i);
-            msg.add( (i+1) + "."  + currTask.getTask() );
-        }
         Ui.printMsg(msg);
     }
 
