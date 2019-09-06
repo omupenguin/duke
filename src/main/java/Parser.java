@@ -18,8 +18,7 @@ public class Parser {
                 removeTask(inputArray[1], tasks);
                 break;
             case "find":
-                findString(command, inputLine, tasks);
-                break;
+                return new FindStringCommand(inputLine);
             default:
                 return addToList(command, inputLine);
         }
@@ -86,30 +85,6 @@ public class Parser {
             msg.add("Use 'list' to check the tasks that are here first!");
             Ui.printMsg(msg);
             return;
-        }
-
-        Ui.printMsg(msg);
-    }
-
-    public static void findString (String command, String inputLine, TaskList tasks) {
-        String searchStr = inputLine.length() != command.length()  // If there are no characters after command,
-                ? inputLine.substring(command.length()+1) : "";          // then description is empty
-        ArrayList<String> itemsFound = new ArrayList<String>();
-        ArrayList<String> msg = new ArrayList<String>();
-        for (Task currTask : tasks.list) {
-            String taskStr = currTask.getTask();
-            if (taskStr.indexOf(searchStr) != -1) {
-                itemsFound.add(taskStr);
-            }
-        }
-
-        if (itemsFound.isEmpty()) {
-            msg.add("There are no matching tasks in your list :(");
-        } else {
-            msg.add("Here are the matching tasks in your list:");
-            for (int i = 0; i < itemsFound.size(); i++) {
-                msg.add( (i+1) + "."  + itemsFound.get(i) );
-            }
         }
 
         Ui.printMsg(msg);
