@@ -15,7 +15,6 @@ public class Duke {
     }
 
     public void run() {
-
 //        Ui.showWelcome(); // inside Storage
         boolean isExit = false;
         Scanner input = new Scanner(System.in); // TODO: Add to Ui instead?
@@ -26,7 +25,8 @@ public class Duke {
                     isExit = true;
                     Parser.exit();
                 } else {
-                    Parser.handleInput(inputLine, tasks);
+                    Command c = Parser.handleInput(inputLine, tasks);
+                    c.execute(tasks);
                     Storage.save(tasks.list);
                 }
             }

@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class Parser {
 
-    public static void handleInput(String inputLine, TaskList tasks) {
+    public static Command handleInput(String inputLine, TaskList tasks) {
         String[] inputArray = inputLine.split(" ");
         String command = inputArray[0];
 
@@ -22,25 +22,26 @@ public class Parser {
                 findString(command, inputLine, tasks);
                 break;
             default:
-                addToList(command, inputLine, tasks);
-                break;
+                return addToList(command, inputLine, tasks);
         }
+        return null;
     }
 
-    public static void addToList(String command, String inputLine, TaskList tasks) {
+    public static Command addToList(String command, String inputLine, TaskList tasks) {
 //        String taskDescription = inputLine.length() != command.length()  // If there are no characters after command,
 //                ? inputLine.substring(command.length()+1) : "";          // then description is empty
         String taskDescription;
+        Command commandToRun;
 
         try {
             taskDescription = inputLine.substring(command.length()+1);
             switch (command) {
                 case "todo":
-                    addTodo(taskDescription, tasks);
-                    break;
+                    commandToRun = new AddTodoCommand(taskDescription);
+                    return commandToRun;
                 case "event":
-                    addEvent(taskDescription, tasks);
-                    break;
+                    commandToRun = new AddEventCommand(taskDescription);
+                    return commandToRun;
                 case "deadline":
                     addDeadline(taskDescription, tasks);
                     break;
@@ -51,7 +52,7 @@ public class Parser {
             ));
             Ui.printMsg(msg);
         }
-
+        return null;
     }
 
     public static void exit() {
@@ -62,46 +63,6 @@ public class Parser {
         //Storage.save(tasks); // Don't need to save since any previous commands are already saved
     }
 
-    public static void addTodo(String taskDescription, TaskList tasks) {
-        if (taskDescription.length() == 0) {
-            ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
-                    "Please specify the task you want to add!"
-            ));
-            Ui.printMsg(msg);
-            return;
-        }
-        Task newTask = new ToDo(taskDescription);
-        tasks.add(newTask);
-
-        Ui.echoAdd(newTask, tasks.size());
-    }
-
-    public static void addEvent(String taskDescription, TaskList tasks) {
-        String dateTrigger = "/at";
-        int dateIndex = taskDescription.indexOf(dateTrigger);
-        String[] data = taskDescription.split(dateTrigger + " ");
-        LocalDateTime time = (data.length != 1) ? Time.readTime(data[1]) : null;
-
-        // Error Checking
-        boolean encounteredError = (taskDescription.length() == 0 || dateIndex == -1 || data.length < 2 || time == null);
-        if (encounteredError) {
-            ArrayList<String> msg = new ArrayList<String>();
-            if (taskDescription.length() == 0) {
-                msg.add("Please specify the task you want to add!");
-            } else if (dateIndex == -1) {
-                msg.add("Please add '/at <date>' after your task to specify the event date." );
-            } else {
-                msg.add("Please use the format 'DD/MM/YYYY HHmm'!");
-            }
-            Ui.printMsg(msg);
-            return;
-
-        } else {
-            Task newTask = new Event(data[0], time);
-            tasks.add(newTask);
-            Ui.echoAdd(newTask, tasks.size());
-        }
-    }
 
     public static void addDeadline(String taskDescription, TaskList tasks) {
         String dateTrigger = "/by";
