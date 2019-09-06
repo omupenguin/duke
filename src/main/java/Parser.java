@@ -15,8 +15,15 @@ public class Parser {
                 completeTask(inputArray[1], tasks);
                 break;
             case "remove":
-                removeTask(inputArray[1], tasks);
-                break;
+                try {
+                    return new RemoveCommand(inputArray[1]);
+                } catch (IndexOutOfBoundsException e) {
+                    ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
+                            "Please use the format 'remove <number>'!"
+                    ));
+                    Ui.printMsg(msg);
+                    break;
+                }
             case "find":
                 return new FindStringCommand(inputLine);
             default:
@@ -56,38 +63,6 @@ public class Parser {
         ));
         Ui.printMsg(msg);
         //Storage.save(tasks); // Don't need to save since any previous commands are already saved
-    }
-
-    public static void removeTask(String taskNum, TaskList tasks) {
-        // Duplicate code with completeTask
-        // Can make a class called "parseInt" or something :D
-        int taskNumInt = 0;
-        ArrayList<String> msg = new ArrayList<String>();
-
-        try {
-            taskNumInt = Integer.parseInt(taskNum);
-        }
-        catch (NumberFormatException e) {
-            msg.add(taskNum + " is not a number. Please use a number instead!");
-            Ui.printMsg(msg);
-            return;
-        }
-
-        try {
-            tasks.getFromList(taskNumInt-1); // Check if the task exists first
-            msg.add("Noted. I've removed this task: ");
-            msg.add("  " + tasks.getFromList(taskNumInt-1).getTask());
-            tasks.removeFromList(taskNumInt-1);
-            msg.add("Now you have " + tasks.size() + " tasks in the list.");
-        }
-        catch (IndexOutOfBoundsException e) {
-            msg.add(taskNum + " is not associated to any task number.");
-            msg.add("Use 'list' to check the tasks that are here first!");
-            Ui.printMsg(msg);
-            return;
-        }
-
-        Ui.printMsg(msg);
     }
 
     public static void completeTask(String completedNum, TaskList tasks) {
