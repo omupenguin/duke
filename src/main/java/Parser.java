@@ -22,29 +22,25 @@ public class Parser {
                 findString(command, inputLine, tasks);
                 break;
             default:
-                return addToList(command, inputLine, tasks);
+                return addToList(command, inputLine);
         }
-        return null;
+        return new ErrorCommand();
     }
 
-    public static Command addToList(String command, String inputLine, TaskList tasks) {
-//        String taskDescription = inputLine.length() != command.length()  // If there are no characters after command,
-//                ? inputLine.substring(command.length()+1) : "";          // then description is empty
+    public static Command addToList(String command, String inputLine) {
+
         String taskDescription;
-        Command commandToRun;
+        Command commandToRun = new ErrorCommand();
 
         try {
             taskDescription = inputLine.substring(command.length()+1);
             switch (command) {
                 case "todo":
                     commandToRun = new AddTodoCommand(taskDescription);
-                    return commandToRun;
                 case "event":
                     commandToRun = new AddEventCommand(taskDescription);
-                    return commandToRun;
                 case "deadline":
-                    addDeadline(taskDescription, tasks);
-                    break;
+                    commandToRun = new AddDeadlineCommand(taskDescription);
             }
         } catch (IndexOutOfBoundsException e) {
             ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
@@ -52,7 +48,8 @@ public class Parser {
             ));
             Ui.printMsg(msg);
         }
-        return null;
+
+        return commandToRun;
     }
 
     public static void exit() {
