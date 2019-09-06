@@ -12,8 +12,15 @@ public class Parser {
             case "list":
                 return new ShowListCommand();
             case "done":
-                completeTask(inputArray[1], tasks);
-                break;
+                try {
+                    return new CompleteCommand(inputArray[1]);
+                } catch (IndexOutOfBoundsException e) {
+                    ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
+                            "Please use the format 'done <number>'!"
+                    ));
+                    Ui.printMsg(msg);
+                    break;
+                }
             case "remove":
                 try {
                     return new RemoveCommand(inputArray[1]);
@@ -42,10 +49,13 @@ public class Parser {
             switch (command) {
                 case "todo":
                     commandToRun = new AddTodoCommand(taskDescription);
+                    break;
                 case "event":
                     commandToRun = new AddEventCommand(taskDescription);
+                    break;
                 case "deadline":
                     commandToRun = new AddDeadlineCommand(taskDescription);
+                    break;
             }
         } catch (IndexOutOfBoundsException e) {
             ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
@@ -65,36 +75,4 @@ public class Parser {
         //Storage.save(tasks); // Don't need to save since any previous commands are already saved
     }
 
-    public static void completeTask(String completedNum, TaskList tasks) {
-        int listNum = 0;
-        ArrayList<String> msg = new ArrayList<String>();
-
-        try {
-            listNum = Integer.parseInt(completedNum);
-        }
-        catch (NumberFormatException e) {
-            msg.add(completedNum + " is not a number. Please use a number instead!");
-            Ui.printMsg(msg);
-            return;
-        }
-
-        Task currTask = new Task("");
-        try {
-            currTask = tasks.getFromList(listNum-1);
-        } catch (IndexOutOfBoundsException e) {
-            msg.add(completedNum + " is not associated to any task number.");
-            msg.add("Use 'list' to check the tasks that are here first!");
-            Ui.printMsg(msg);
-            return;
-        }
-
-        if (currTask.isDone == true) {
-            msg.add("Task " + listNum + " is already completed! :)");
-        } else {
-            currTask.markAsDone();
-            msg.add("Nice! I've marked this task as done:");
-            msg.add("  " + currTask.getTask());
-        }
-        Ui.printMsg(msg);
-    }
 }
