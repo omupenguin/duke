@@ -14,7 +14,7 @@ public class Duke {
         tasks = new TaskList(Storage.load());
     }
 
-    public void run() {
+    public void run() throws Exception {
 //        Ui.showWelcome(); // inside Storage
         boolean isExit = false;
         Scanner input = new Scanner(System.in); // TODO: Add to Ui instead?
@@ -33,7 +33,7 @@ public class Duke {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception { // Exception needs to be handled?
         new Duke().run();
     }
 }

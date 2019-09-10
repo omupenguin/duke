@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public abstract class Command {
 
-    public abstract void execute(TaskList task);
+    public abstract void execute(TaskList task) throws Exception;
 
     public int stringToInt(String str) {
         int newInt = 0;

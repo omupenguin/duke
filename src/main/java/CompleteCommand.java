@@ -8,7 +8,7 @@ public class CompleteCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList tasks) {
+    public void execute(TaskList tasks) throws Exception {
         int taskNumInt = stringToInt(taskNumStr);
         if (taskNumInt == 0) return; // don't do anything if task number is invalid
 
@@ -21,7 +21,7 @@ public class CompleteCommand extends Command {
             msg.add(taskNumInt + " is not associated to any task number.");
             msg.add("Use 'list' to check the tasks that are here first!");
             Ui.printMsg(msg);
-            return;
+            throw new Exception("Task number not in list");
         }
 
         if (currTask.isDone == true) {
