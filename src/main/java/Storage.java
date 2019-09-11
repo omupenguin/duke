@@ -2,8 +2,27 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Storage handles the saving and loading of data from ./data/duke.txt.
+ */
 public class Storage {
 
+    /**
+     * Returns a TaskList containing tasks from a save file (if available),
+     * else returns an empty TaskList.
+     * <p>
+     *     This method first tries to read from ./data/duke.txt. For every line
+     *     in the file, this method checks the type of task stored, and then converts
+     *     them into a task accordingly and stores into a TaskList.
+     * </p>
+     * <p>
+     *     If ./data/duke.txt is not found, an empty TaskList will be returned.
+     * </p>
+     * <p>
+     *     If an error occurs while reading from ./data/duke.txt, exit duke.
+     * </p>
+     * @return TaskList containing data (if any) from ./data/duke.txt.
+     */
     public static ArrayList<Task> load() {
         ArrayList<Task> list = new ArrayList<Task>();
 
@@ -55,6 +74,14 @@ public class Storage {
         return list;
     }
 
+    /**
+     * This method takes and writes the information of the tasks
+     *  within the specified ArrayList and into a file ./data/duke.txt.
+     *  <p>
+     *      If an error occurs while writing to the file, the method stops running.
+     *  </p>
+     * @param list An Arraylist containing the tasks to be saved.
+     */
     public static void save(ArrayList<Task> list) {
         try(FileWriter file = new FileWriter("./data/duke.txt")) {
             for (Task currTask : list) {

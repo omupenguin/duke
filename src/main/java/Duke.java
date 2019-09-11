@@ -1,19 +1,28 @@
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.Arrays;
-import java.util.Locale;
 import java.util.Scanner;
-import java.util.ArrayList;
 
+/**
+ * <h1>Duke</h1>
+ * Duke is a chat-bot styled todo_list manager.
+ *
+ * @author  Aik Peng
+ * @version 1.0
+ * @since   2019-07-26
+ */
 public class Duke {
 
     private TaskList tasks;
 
+    /**
+     * Creates an instance of Duke using a task list loaded from /data/duke.txt
+     */
     public Duke() {
         tasks = new TaskList(Storage.load());
     }
 
+    /**
+     * Runs the main program of Duke
+     * @throws Exception
+     */
     public void run() throws Exception {
 //        Ui.showWelcome(); // inside Storage
         boolean isExit = false;

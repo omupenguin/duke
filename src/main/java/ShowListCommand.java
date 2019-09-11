@@ -1,7 +1,14 @@
 import java.util.ArrayList;
 
+/**
+ * ShowListCommand is a command used to display all the tasks stored in the TaskList.
+ */
 public class ShowListCommand extends Command {
 
+    /**
+     * Creates and prints out the tasks from the specified TaskList in a readable format.
+     * @param tasks TaskList to have its tasks printed.
+     */
     @Override
     public void execute(TaskList tasks) {
 

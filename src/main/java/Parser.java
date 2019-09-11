@@ -2,9 +2,29 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Parser checks the user input and creates a command corresponding to the user input.
+ */
 public class Parser {
 
-    public static Command handleInput(String inputLine, TaskList tasks) {
+    /**
+     * Returns a command corresponding to the user input.
+     * <p>
+     *     This method checks the first word of the 'inputLine' and returns the case
+     *     accordingly.
+     * </p>
+     * <p>
+     *     If the first word is not 'list', 'done', 'remove' or 'find', addToList() will
+     *     run instead.
+     * </p>
+     * <p>
+     *     If a number is not provided in a done or remove command, an error will be printed,
+     *     and an ErrorCommand will be returned.
+     * </p>
+     * @param inputLine The entire line input from the user.
+     * @return a command corresponding to the user input.
+     */
+    public static Command handleInput(String inputLine) {
         String[] inputArray = inputLine.split(" ");
         String command = inputArray[0];
 
@@ -39,6 +59,13 @@ public class Parser {
         return new ErrorCommand();
     }
 
+    /**
+     * Returns an add command corresponding to the specified command, otherwise alert the user
+     * that the command is invalid.
+     * @param command The command to be created,
+     * @param inputLine The entire line input from the user.
+     * @return Returns an add command corresponding to the specified command.
+     */
     public static Command addToList(String command, String inputLine) {
 
         String taskDescription;
@@ -67,6 +94,9 @@ public class Parser {
         return commandToRun;
     }
 
+    /**
+     * This method will exit the entire program.
+     */
     public static void exit() {
         ArrayList<String> msg = new ArrayList<String>(Arrays.asList(
                 "Bye. Hope to see you again soon!"
